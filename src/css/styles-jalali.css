@@ -1,22 +1,33 @@
+@font-face {
+  font-family: "Yekan";
+  src: url("/fonts/ss.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: var(--font);
+}
+
 :root {
-  --dark-body-bg: red;
+  --dark-body-bg: #040818;
   --light-body-bg: #f5f7fb;
 
-  --dark-input: #323741;
+  --dark-input: #111620;
   --light-input: #ffffff;
 
-  --dark-border: #484d5a;
+  --dark-border: #030407;
   --light-border: #b8bccb;
 
   --dark-date-foreground: #ffffff;
   --dark-inactive-fg: #636a78;
   --dark-active-fg: #9ca0b1;
-  --dark-current-year: #3b414a;
+  --dark-current-year: #121922;
   --dark-current-year-fg: #b2b8c9;
-  --dark-selected: #1d5eff;
+  --dark-selected: #f9b233;
   --dark-hover: #2c437b;
-  --dark-arrows-bg: #b0b8cc;
-  --dark-arrows-fill: #333641;
+  --font: "Yekan";
+  --dark-arrows-fill: #ffffff;
 }
 
 html {
@@ -32,7 +43,7 @@ html {
 body {
   height: 100vh;
   background: var(--dark-body-bg);
-  font-family: Helvetica, sans-serif;
+  font-family: Yekan;
   display: grid;
   place-items: center;
 }
@@ -105,11 +116,11 @@ label {
 }
 
 .cal-btn.back img {
-  transform: rotate(90deg);
+  transform: rotate(-90deg);
 }
 
 .cal-btn.front img {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 }
 
 #cal_days,
@@ -170,4 +181,19 @@ label {
   position: absolute;
   bottom: 3px;
   left: 50%;
+}
+
+.hiddenz {
+  visibility: hidden;
+}
+
+#change-calendar {
+  margin-top: 1rem;
+  width: 100%;
+  border-radius: 1rem;
+  background-color: rgb(8, 7, 7);
+  padding-block: 0.3rem;
+  cursor: pointer;
+  color: white;
+  border: 0;
 }
