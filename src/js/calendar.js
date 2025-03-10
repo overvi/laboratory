@@ -163,7 +163,10 @@ const setHeaderNav = (offset, month, year, monthDetails) => {
   };
 };
 
-const setCalBody = (monthDetails, today) => {
+const setCalBody = (monthDetails, todayTimestamp, selectedDay) => {
+  // Clear the previous calendar dates
+  calendar.innerHTML = "";
+
   // Add dates to calendar
   for (let i = 0; i < monthDetails.length; i++) {
     let div = document.createElement("div"),
@@ -173,27 +176,42 @@ const setCalBody = (monthDetails, today) => {
     div.classList.add("cal_date");
 
     // Check if the current date is before today and disable it
-    if (monthDetails[i].timestamp < today) {
+    if (monthDetails[i].timestamp < todayTimestamp) {
       div.classList.add("disabled");
     } else {
       monthDetails[i].month === 0
         ? div.classList.add("current")
         : div.classList.add("hiddenz");
 
-      monthDetails[i].month === 0 && isCurrentDay(monthDetails[i], div, today);
+      monthDetails[i].month === 0 &&
+        isCurrentDay(monthDetails[i], div, todayTimestamp);
     }
 
     span.classList.add("cell_item");
 
     span.innerText = monthDetails[i].date;
 
+    // Add the active or selected day class
+    if (monthDetails[i].timestamp === selectedDay) {
+      div.classList.add("active");
+      div.classList.add("isSelected");
+    }
+
     div.appendChild(span);
     calendar.appendChild(div);
   }
 };
+
 // Re arrange dates according to arrow
 
-const updateCalendar = (btn, month, year, monthDetails) => {
+const updateCalendar = (
+  btn,
+  month,
+  year,
+  monthDetails,
+  todayTimestamp,
+  selectedDay
+) => {
   let newCal, offset;
   if (btn.classList.contains("back")) {
     offset = -1;
@@ -203,8 +221,9 @@ const updateCalendar = (btn, month, year, monthDetails) => {
   newCal = setHeaderNav(offset, month, year, monthDetails);
 
   setHeader(newCal.year, newCal.month, calHeaderTitle);
-  calendar.innerHTML = "";
-  setCalBody(newCal.monthDetails);
+
+  // Re-render the calendar body with the selectedDay and todayTimestamp
+  setCalBody(newCal.monthDetails, todayTimestamp, selectedDay);
 
   return newCal;
 };
@@ -366,10 +385,8 @@ export const updateInput = (monthDetails, selectedDay, input) => {
 };
 
 export const initCalendar = () => {
-  const prev = document.querySelectorAll(".cell_wrapper");
-  if (prev.length) {
-    prev.forEach((item) => item.remove());
-  }
+  // Clear the calendar before rendering the new one
+  calendar.innerHTML = ""; // This clears the entire calendar including the header and days
 
   let year, month, monthDetails, todayTimestamp;
 
@@ -412,9 +429,17 @@ export const initCalendar = () => {
 
   let selectedDay = todayTimestamp;
 
+  // Now handle the navigation buttons
   document.querySelectorAll(".cal-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const newDate = updateCalendar(btn, month, year, monthDetails);
+      const newDate = updateCalendar(
+        btn,
+        month,
+        year,
+        monthDetails,
+        todayTimestamp,
+        selectedDay
+      );
       year = newDate.year;
       month = newDate.month;
       monthDetails = newDate.monthDetails;
@@ -423,8 +448,11 @@ export const initCalendar = () => {
     });
   });
 
+  // Set the header for the new month
   setHeader(year, month, calHeaderTitle);
 
+  // Add the weekday labels at the top of the calendar
+  calDays.innerHTML = ""; // Clear previous days
   for (let i = 0; i < days.length; i++) {
     let div = document.createElement("div"),
       span = document.createElement("span");
@@ -438,10 +466,13 @@ export const initCalendar = () => {
     calDays.appendChild(div);
   }
 
+  // Set the date input value to today's date
   setDateToInput(todayTimestamp, input);
 
-  setCalBody(monthDetails, todayTimestamp);
+  // Render the new month body
+  setCalBody(monthDetails, todayTimestamp, selectedDay);
 
+  // Handle click events for selecting a date
   updateInput(monthDetails, selectedDay, input);
 };
 
