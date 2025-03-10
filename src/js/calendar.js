@@ -171,10 +171,18 @@ const setCalBody = (monthDetails, today) => {
 
     div.classList.add("cell_wrapper");
     div.classList.add("cal_date");
-    monthDetails[i].month === 0
-      ? div.classList.add("current")
-      : div.classList.add("hiddenz");
-    monthDetails[i].month === 0 && isCurrentDay(monthDetails[i], div, today);
+
+    // Check if the current date is before today and disable it
+    if (monthDetails[i].timestamp < today) {
+      div.classList.add("disabled");
+    } else {
+      monthDetails[i].month === 0
+        ? div.classList.add("current")
+        : div.classList.add("hiddenz");
+
+      monthDetails[i].month === 0 && isCurrentDay(monthDetails[i], div, today);
+    }
+
     span.classList.add("cell_item");
 
     span.innerText = monthDetails[i].date;
@@ -183,7 +191,6 @@ const setCalBody = (monthDetails, today) => {
     calendar.appendChild(div);
   }
 };
-
 // Re arrange dates according to arrow
 
 const updateCalendar = (btn, month, year, monthDetails) => {
