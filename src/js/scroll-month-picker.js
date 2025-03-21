@@ -17,6 +17,15 @@ export function initScrollMonthPicker() {
   let lastScrollPosition = 0;
   let scrollTimeout;
 
+  months.forEach((month) => {
+    const el = document.createElement("div");
+    el.classList.add("month-item");
+    el.textContent = month;
+    newMonthList.appendChild(el);
+  });
+
+  monthItems = Array.from(newMonthList.querySelectorAll(".month-item"));
+
   function updateFontSizes() {
     monthItems.forEach((item, index) => {
       const distance = Math.abs(index - currentIndex);
@@ -114,15 +123,6 @@ export function initScrollMonthPicker() {
       scrollToMonth(index);
     });
   });
-
-  months.forEach((month) => {
-    const el = document.createElement("div");
-    el.classList.add("month-item");
-    el.textContent = month;
-    newMonthList.appendChild(el);
-  });
-
-  monthItems = Array.from(newMonthList.querySelectorAll(".month-item")); // Use the new list
 
   // **This line ensures the default selected month gets the "selected" class**
   updateSelectedMonth(currentIndex);
