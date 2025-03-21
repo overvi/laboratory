@@ -343,6 +343,11 @@ label {
   width: 5px;
 }
 
+.month-list {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer/Edge */
+}
+
 .month-list::-webkit-scrollbar-thumb {
   display: none;
 }
