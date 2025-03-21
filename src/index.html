@@ -19,24 +19,57 @@
           <input readonly type="text" id="date" />
         </div>
         <div id="date_picker_calendar">
-          <div id="calendar_header">
-            <button class="cal-btn back">
-              <img
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABJUlEQVR4nO2Uv0oDQRCHR9BKrAQJ2FgIdnc7njtzSbMzd7lGC80T5DXMW+gzpNJHsPEJYuELBA60EBELsfIfBGIixvNyt0IKP9h2vt3fb1iAfxaCXZt0DGuOrO8+jmHNQ3JHnwLDeutrOI4lJDcTAcngDwSDSUSkCbK++RSEJAdfejCkfX+31/63oq1N15H0rn7Bch80s42Z22SsdGsLrHQLVxZJLioLSC8BYKlQELLbQpanCrk/Y+y2C4dPFd6bP3s9hrI455aR9GqO219HUbRSWjB6xV5qDcnL7wJ5RZs2oQpIelqi2BOoShBkq0g6LMg932m11qAOhnX/5+zlEHyALOczhp+BL6x1DSR9mPoOHsM42QSfGE6yUR+kQxO7ttfhC80HheuaG9wAq10AAAAASUVORK5CYII="
-              />
-            </button>
-            <span></span>
-            <button class="cal-btn front">
-              <img
-                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAABJUlEQVR4nO2Uv0oDQRCHR9BKrAQJ2FgIdnc7njtzSbMzd7lGC80T5DXMW+gzpNJHsPEJYuELBA60EBELsfIfBGIixvNyt0IKP9h2vt3fb1iAfxaCXZt0DGuOrO8+jmHNQ3JHnwLDeutrOI4lJDcTAcngDwSDSUSkCbK++RSEJAdfejCkfX+31/63oq1N15H0rn7Bch80s42Z22SsdGsLrHQLVxZJLioLSC8BYKlQELLbQpanCrk/Y+y2C4dPFd6bP3s9hrI455aR9GqO219HUbRSWjB6xV5qDcnL7wJ5RZs2oQpIelqi2BOoShBkq0g6LMg932m11qAOhnX/5+zlEHyALOczhp+BL6x1DSR9mPoOHsM42QSfGE6yUR+kQxO7ttfhC80HheuaG9wAq10AAAAASUVORK5CYII="
-              />
-            </button>
+          <div id="calendar_header" class="items-center">
+            <div class="flex items-center">
+              <p class="fw-bold cal_label">تاریخ رفت</p>
+
+              <div
+                id="year-picker"
+                class="select-container flex items-center gap-2 relative"
+              >
+                <div class="custom-select">
+                  <select name="" id=""></select>
+                </div>
+                <div class="dropdown-ico" style="margin-top: 0.5rem">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M13.2807 5.9668L8.93404 10.3135C8.4207 10.8268 7.5807 10.8268 7.06737 10.3135L2.7207 5.9668"
+                      stroke="#292D32"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div>
+              <button id="change-calendar">تقویم میلادی</button>
+            </div>
           </div>
-          <div id="cal_wrapper">
-            <div id="cal_days"></div>
-            <div id="calendar_main"></div>
+          <div class="flex whole-wrapper items-center" style="gap: 5px">
+            <div class="month-picker">
+              <div class="month-list-container">
+                <div class="selection-indicator"></div>
+                <div class="month-list"></div>
+              </div>
+            </div>
+            <div id="cal_wrapper">
+              <div id="cal_days"></div>
+              <div id="calendar_main"></div>
+            </div>
           </div>
-          <button id="change-calendar">تقویم میلادی</button>
+          <div class="flex items-center actions">
+            <button id="delete">حذف</button>
+            <button id="select">انتخاب</button>
+          </div>
         </div>
       </div>
     </main>

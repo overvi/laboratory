@@ -1,14 +1,22 @@
 import * as module from "./calendar";
 import jalaali from "jalaali-js";
+import { initScrollMonthPicker } from "./scroll-month-picker";
+import { initCustomSelect } from "./select";
 
 let calendarType = "jalali";
 
 const input = document.querySelector("#date");
 const calendar = document.querySelector("#calendar_main"),
-  calHeaderTitle = document.querySelector("#calendar_header span"),
   calDays = document.querySelector("#cal_days");
 
-let months, days;
+let selectedYear;
+let selectedMonth;
+let selectedTime;
+export let currentMonthIndex;
+
+export let initialized = false;
+export let months;
+let days;
 
 const Jalalimonths = [
   "فروردین",
@@ -61,9 +69,15 @@ const Georgiandays = [
 ];
 
 export const isSelectedDay = (day, cell, selectedDay) => {
+  // Remove previous selections
+  document.querySelectorAll(".isSelected").forEach((el) => {
+    el.classList.remove("active", "isSelected");
+  });
+
   if (day.timestamp === selectedDay) {
     cell.classList.add("active");
     cell.classList.add("isSelected");
+    selectedTime = day.timestamp;
   }
 };
 
@@ -99,7 +113,6 @@ export const getDateStringFromTimestamp = (timestamp) => {
 export const setDateToInput = (timestamp, input) => {
   let dateString = getDateStringFromTimestamp(timestamp);
   input.value = dateString;
-  alert(input.value);
 };
 
 export const getNumberOfDays = (year, month) => {
@@ -134,10 +147,6 @@ export const getJalaliFirstDay = (year, month) => {
   const jalaliFirstDay = (gregorianFirstDay + 1) % 7;
 
   return jalaliFirstDay;
-};
-
-export const setHeader = (year, month, el) => {
-  el.innerHTML = getMonthStr(month) + " " + year;
 };
 
 const setHeaderNav = (offset, month, year, monthDetails) => {
@@ -176,7 +185,8 @@ const setCalBody = (monthDetails, todayTimestamp, selectedDay) => {
     div.classList.add("cal_date");
 
     // Check if the current date is before today and disable it
-    if (monthDetails[i].timestamp < todayTimestamp) {
+
+    if (Math.abs(monthDetails[i].timestamp) < todayTimestamp) {
       div.classList.add("disabled");
     } else {
       monthDetails[i].month === 0
@@ -195,6 +205,7 @@ const setCalBody = (monthDetails, todayTimestamp, selectedDay) => {
     if (monthDetails[i].timestamp === selectedDay) {
       div.classList.add("active");
       div.classList.add("isSelected");
+      selectedTime = monthDetails[i].timestamp;
     }
 
     div.appendChild(span);
@@ -219,8 +230,6 @@ const updateCalendar = (
     offset = 1;
   }
   newCal = setHeaderNav(offset, month, year, monthDetails);
-
-  setHeader(newCal.year, newCal.month, calHeaderTitle);
 
   // Re-render the calendar body with the selectedDay and todayTimestamp
   setCalBody(newCal.monthDetails, todayTimestamp, selectedDay);
@@ -344,39 +353,22 @@ const getDayDetails = (args) => {
   };
 };
 
-export const updateInput = (monthDetails, selectedDay, input) => {
-  let currentDay = document.querySelector(".isCurrent");
-
-  // Update input based on clicked cell
+export const updateInput = (monthDetails, selectedDay) => {
   document.querySelectorAll(".cell_wrapper").forEach((cell) => {
     if (cell.classList.contains("current")) {
       cell.addEventListener("click", (e) => {
-        let cell_date = e.target.textContent;
-
-        // Remove active state from current day
+        let cell_date = e.target.textContent.trim();
 
         for (let i = 0; i < monthDetails.length; i++) {
-          if (monthDetails[i].month === 0) {
-            if (monthDetails[i].date.toString().trim() === cell_date.trim()) {
-              selectedDay = monthDetails[i].timestamp;
-
-              module.setDateToInput(selectedDay, input);
-
-              currentDay !== null && currentDay.classList.remove("active");
-
-              selectOnClick();
-
-              cell
-                .querySelector("span")
-                .classList.contains("inactive_indicator") &&
-                cell
-                  .querySelector("span")
-                  .classList.remove("inactive_indicator");
-
-              isSelectedDay(monthDetails[i], cell, selectedDay);
-
-              // Remove inactive state if current day is clicked
-            }
+          if (
+            monthDetails[i].month === 0 &&
+            monthDetails[i].date.toString().trim() === cell_date
+          ) {
+            selectedTime = monthDetails[i].timestamp; // ✅ Store selected timestamp
+            document
+              .querySelectorAll(".isSelected")
+              .forEach((el) => el.classList.remove("active", "isSelected"));
+            cell.classList.add("active", "isSelected"); // ✅ Visually highlight selection
           }
         }
       });
@@ -391,6 +383,17 @@ export const initCalendar = () => {
   let year, month, monthDetails, todayTimestamp;
 
   let date = new Date();
+
+  const currentDate = new Date();
+
+  if (calendarType === "jalali") {
+    const jalaliDate = jalaali.toJalaali(currentDate);
+    selectedYear = jalaliDate.jy;
+    selectedMonth = jalaliDate.jm;
+  } else {
+    selectedYear = currentDate.getFullYear();
+    selectedMonth = currentDate.getMonth() + 1;
+  }
 
   if (calendarType === "jalali") {
     months = Jalalimonths;
@@ -415,6 +418,8 @@ export const initCalendar = () => {
     month = jalaliDate.jm - 1;
 
     monthDetails = getMonthDetails(year, month);
+
+    currentMonthIndex = month;
   } else {
     months = Georgianmonths;
     days = Georgiandays;
@@ -425,6 +430,7 @@ export const initCalendar = () => {
     todayTimestamp = new Date(year, month, day).getTime();
 
     monthDetails = getMonthDetailsGregorian(year, month);
+    currentMonthIndex = month;
   }
 
   let selectedDay = todayTimestamp;
@@ -448,9 +454,6 @@ export const initCalendar = () => {
     });
   });
 
-  // Set the header for the new month
-  setHeader(year, month, calHeaderTitle);
-
   // Add the weekday labels at the top of the calendar
   calDays.innerHTML = ""; // Clear previous days
   for (let i = 0; i < days.length; i++) {
@@ -460,7 +463,7 @@ export const initCalendar = () => {
     div.classList.add("cell_wrapper");
     span.classList.add("cell_item");
 
-    span.innerText = days[i].slice(0, 2);
+    span.innerText = days[i];
 
     div.appendChild(span);
     calDays.appendChild(div);
@@ -474,18 +477,191 @@ export const initCalendar = () => {
 
   // Handle click events for selecting a date
   updateInput(monthDetails, selectedDay, input);
+
+  initialized = true;
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  const toggleBtn = document.querySelector("#change-calendar");
+  const toggleBtn = document.getElementById("change-calendar");
+  const yearPicker = document.getElementById("year-picker"); // Select year picker
 
+  // Function to generate year options
+  function generateYearOptions() {
+    const selectElement = yearPicker.querySelector("select");
+
+    // Clear any existing options
+    selectElement.innerHTML = "";
+
+    if (calendarType === "jalali") {
+      // Add 4 years starting from the current Jalali year
+      for (let i = 0; i < 4; i++) {
+        const option = document.createElement("option");
+        option.value = selectedYear + i;
+        option.textContent = selectedYear + i;
+        selectElement.appendChild(option);
+      }
+    } else {
+      // Add 4 years starting from the current Gregorian year
+      for (let i = 0; i < 4; i++) {
+        const option = document.createElement("option");
+        option.value = selectedYear + i;
+        option.textContent = selectedYear + i;
+        selectElement.appendChild(option);
+      }
+    }
+  }
+
+  // Toggle between Jalali and Gregorian calendars
   toggleBtn.addEventListener("click", () => {
     calendarType = calendarType === "jalali" ? "gregorian" : "jalali";
-    document.documentElement.style.setProperty(
-      "--font",
-      calendarType === "jalali" ? "Yekan" : "Inter"
-    );
+
+    toggleBtn.textContent =
+      calendarType === "jalali" ? "تقویم میلادی" : "تقویم شمسی";
 
     initCalendar();
+    initScrollMonthPicker();
+    generateYearOptions();
+    initCustomSelect();
+  });
+
+  // Initialize year picker options
+  generateYearOptions();
+
+  // Year picker change event
+  if (yearPicker) {
+    yearPicker.querySelector("select").addEventListener("change", (e) => {
+      const selectedYear = parseInt(e.target.value, 10);
+
+      if (!isNaN(selectedYear)) {
+        updateCalendarYear(selectedYear);
+      }
+    });
+  }
+
+  document.querySelector("#select").addEventListener("click", () => {
+    if (selectedTime) {
+      setDateToInput(selectedTime, input); // ✅ Update input when button is clicked
+    }
+  });
+  document.querySelector("#delete").addEventListener("click", () => {
+    selectedTime = null; // ✅ Reset selected date
+    document
+      .querySelectorAll(".isSelected")
+      .forEach((el) => el.classList.remove("active", "isSelected")); // ✅ Remove highlight
+    input.value = ""; // ✅ Clear input field
   });
 });
+
+const updateCalendarYear = (newYear) => {
+  let currentYear = newYear;
+  let currentMonth = selectedMonth;
+  let currentDay, monthDetails, selectedTimestamp;
+
+  console.log(currentMonth);
+  let todayJalali = jalaali.toJalaali(new Date());
+
+  let gregorianDate = jalaali.toGregorian(
+    todayJalali.jy,
+    todayJalali.jm,
+    todayJalali.jd
+  );
+
+  let todayTimestamp = new Date(
+    gregorianDate.gy,
+    gregorianDate.gm - 1,
+    gregorianDate.gd
+  ).getTime();
+
+  if (calendarType === "jalali") {
+    months = Jalalimonths;
+    days = Jalalidays;
+
+    let jalaliDate = jalaali.toJalaali(new Date());
+    currentDay = jalaliDate.jd;
+
+    let maxDays = getNumberOfDays(currentYear, currentMonth);
+    if (currentDay > maxDays) {
+      currentDay = maxDays;
+    }
+
+    selectedTimestamp = selectedTime;
+    monthDetails = getMonthDetails(currentYear, currentMonth);
+  } else {
+    months = Georgianmonths;
+    days = Georgiandays;
+
+    let currentDate = new Date();
+    currentDay = currentDate.getDate();
+
+    let maxDays = getNumberOfDaysGregorian(currentYear, currentMonth);
+    if (currentDay > maxDays) {
+      currentDay = maxDays;
+    }
+
+    selectedTimestamp = selectedTime;
+    monthDetails = getMonthDetailsGregorian(currentYear, currentMonth);
+  }
+
+  // Update global state
+  selectedYear = currentYear;
+
+  setCalBody(monthDetails, todayTimestamp, selectedTimestamp); // ✅ Real todayTimestamp
+  setDateToInput(selectedTimestamp, input);
+  updateInput(monthDetails, selectedTimestamp, input);
+};
+
+export const updateCalendarMonth = (newMonth) => {
+  let currentMonth = newMonth;
+  let currentYear = selectedYear;
+  let currentDay, monthDetails, selectedTimestamp;
+
+  let todayJalali = jalaali.toJalaali(new Date());
+
+  let gregorianDate = jalaali.toGregorian(
+    todayJalali.jy,
+    todayJalali.jm,
+    todayJalali.jd
+  );
+
+  let todayTimestamp = new Date(
+    gregorianDate.gy,
+    gregorianDate.gm - 1,
+    gregorianDate.gd
+  ).getTime();
+
+  if (calendarType === "jalali") {
+    months = Jalalimonths;
+    days = Jalalidays;
+
+    let jalaliDate = jalaali.toJalaali(new Date());
+    currentDay = jalaliDate.jd;
+
+    let maxDays = getNumberOfDays(currentYear, currentMonth);
+    if (currentDay > maxDays) {
+      currentDay = maxDays;
+    }
+
+    selectedTimestamp = selectedTime;
+    monthDetails = getMonthDetails(currentYear, currentMonth);
+  } else {
+    months = Georgianmonths;
+    days = Georgiandays;
+
+    let currentDate = new Date();
+    currentDay = currentDate.getDate();
+
+    let maxDays = getNumberOfDaysGregorian(currentYear, currentMonth);
+    if (currentDay > maxDays) {
+      currentDay = maxDays;
+    }
+
+    selectedTimestamp = selectedTime;
+    monthDetails = getMonthDetailsGregorian(currentYear, currentMonth);
+  }
+
+  selectedMonth = currentMonth;
+
+  setCalBody(monthDetails, todayTimestamp, selectedTimestamp); // ✅ Real todayTimestamp
+  setDateToInput(selectedTimestamp, input);
+  updateInput(monthDetails, selectedTimestamp, input);
+};
