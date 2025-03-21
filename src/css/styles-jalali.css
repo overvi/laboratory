@@ -72,7 +72,6 @@ body {
 }
 
 #date_picker {
-  width: 300px;
   margin: 0 auto;
 
   position: relative;
@@ -208,8 +207,6 @@ label {
 .hiddenz {
   visibility: hidden;
 }
-
-
 
 #change-calendar {
   width: 100%;
