@@ -11,14 +11,6 @@ export function initScrollMonthPicker() {
   monthList.parentNode.replaceChild(newMonthList, monthList); // Replace old one
   monthList.innerHTML = ""; // Clear all items
 
-  // **Step 2: Rebuild the month list**
-  months.forEach((month) => {
-    const el = document.createElement("div");
-    el.classList.add("month-item");
-    el.textContent = month;
-    newMonthList.appendChild(el);
-  });
-
   let monthItems = Array.from(document.querySelectorAll(".month-item"));
   const colors = ["#000", "#5A5A5A", "#858585", "#B6B6B6", "#D4D4D4"];
   let isScrolling = false;
