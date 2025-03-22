@@ -1,11 +1,6 @@
-import { initCalendar } from "./calendar";
-import { initScrollMonthPicker } from "./scroll-month-picker";
+import DatePicker from "./calendar.js";
 
-import { initCustomSelect } from "./select";
+// Export DatePicker globally
+window.DatePicker = DatePicker;
 
-initCalendar();
-initScrollMonthPicker();
-
-document.addEventListener("DOMContentLoaded", () => {
-  initCustomSelect();
-});
+export default DatePicker;

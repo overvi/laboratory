@@ -1,11 +1,37 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/js/main.js", // Entry point for your application
+  entry: "./src/js/main.js",
+
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    filename: "datepicker.esm.js",
+    libraryTarget: "module", // Set as an ES module
+    module: true, // Required for ES modules
   },
-  module: {},
-  mode: "development",
+  experiments: {
+    outputModule: true, // Enables module output
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+          },
+        },
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+    ],
+  },
+  resolve: {
+    extensions: [".js"],
+  },
+  mode: "production",
 };

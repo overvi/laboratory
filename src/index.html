@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,23 +14,22 @@
   </head>
   <body>
     <main>
-      <div id="date_picker" style="direction: rtl">
-        <div id="date_picker_input">
-          <input readonly type="text" id="date" />
+      <div class="dp" id="departure_date_picker" style="direction: rtl">
+        <div class="date_picker_input">
+          <input readonly type="text" class="date" />
         </div>
-        <div id="date_picker_calendar">
-          <div id="calendar_header" class="items-center">
+        <div class="date_picker_calendar">
+          <div class="calendar_header" class="items-center">
             <div class="flex items-center">
               <p class="fw-bold cal_label">تاریخ رفت</p>
 
               <div
-                id="year-picker"
-                class="select-container flex items-center gap-2 relative"
+                class="select-container year-container flex items-center gap-2 relative"
               >
                 <div class="custom-select">
                   <select name="" id=""></select>
                 </div>
-                <div class="dropdown-ico" style="margin-top: 0.5rem">
+                <div class="dropdown-ico">
                   <svg
                     width="16"
                     height="16"
@@ -51,7 +50,7 @@
               </div>
             </div>
             <div>
-              <button id="change-calendar">تقویم میلادی</button>
+              <button class="change-calendar">تقویم میلادی</button>
             </div>
           </div>
           <div class="flex whole-wrapper items-center" style="gap: 5px">
@@ -61,18 +60,18 @@
                 <div class="month-list"></div>
               </div>
             </div>
-            <div id="cal_wrapper">
-              <div id="cal_days"></div>
-              <div id="calendar_main"></div>
+            <div class="cal_wrapper">
+              <div class="cal_days"></div>
+              <div class="calendar_main"></div>
             </div>
           </div>
           <div class="flex items-center actions">
-            <button id="delete">حذف</button>
-            <button id="select">انتخاب</button>
+            <button class="dp-btn delete">حذف</button>
+            <button class="dp-btn select">انتخاب</button>
           </div>
         </div>
       </div>
     </main>
-    <script src="/dist/bundle.js"></script>
+    <script type="module" defer src="./js/tt.js"></script>
   </body>
 </html>

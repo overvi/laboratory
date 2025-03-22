@@ -1,8 +1,9 @@
-import { currentMonthIndex, months, updateCalendarMonth } from "./calendar";
+export function dpInitScrollMonthPicker(selector) {
+  const datePicker = window.datePickers?.get(selector);
 
-export function initScrollMonthPicker() {
-  let currentIndex = currentMonthIndex;
-  const monthList = document.querySelector(".month-list");
+  let currentIndex = datePicker.getCurrentMonthIndex();
+  const dp = document.querySelector(`#${selector}`);
+  const monthList = dp.querySelector(`.month-list`);
 
   if (!monthList) return;
 
@@ -11,16 +12,20 @@ export function initScrollMonthPicker() {
   monthList.parentNode.replaceChild(newMonthList, monthList); // Replace old one
   monthList.innerHTML = ""; // Clear all items
 
-  let monthItems = Array.from(document.querySelectorAll(".month-item"));
+  let monthItems = Array.from(dp.querySelectorAll(".month-item"));
   const colors = ["#000", "#5A5A5A", "#858585", "#B6B6B6", "#D4D4D4"];
   let isScrolling = false;
   let lastScrollPosition = 0;
   let scrollTimeout;
 
-  months.forEach((month) => {
+  console.log(datePicker.getMonths());
+
+  datePicker.getMonths().forEach((month) => {
     const el = document.createElement("div");
+
     el.classList.add("month-item");
     el.textContent = month;
+
     newMonthList.appendChild(el);
   });
 
@@ -40,15 +45,16 @@ export function initScrollMonthPicker() {
     document
       .querySelector(".month-item.selected")
       ?.classList.remove("selected");
+
     monthItems[index].classList.add("selected");
     currentIndex = index;
     updateFontSizes();
-    updateCalendarMonth(index);
+    datePicker.updateCalendarMonth(index);
   }
 
   function scrollToMonth(index) {
     const item = monthItems[index];
-    const containerRect = document
+    const containerRect = dp
       .querySelector(".month-list-container")
       .getBoundingClientRect();
     const containerCenter = containerRect.height / 2;
@@ -135,7 +141,7 @@ export function initScrollMonthPicker() {
     if (Math.abs(newMonthList.scrollTop - lastScrollPosition) > 10) {
       clearTimeout(scrollTimeout);
       scrollTimeout = setTimeout(() => {
-        const containerRect = document
+        const containerRect = dp
           .querySelector(".month-list-container")
           .getBoundingClientRect();
         const containerCenter = containerRect.top + containerRect.height / 2;

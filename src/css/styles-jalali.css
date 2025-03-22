@@ -5,7 +5,11 @@
   font-style: normal;
 }
 
-button {
+:root {
+  --font: "Yekan";
+}
+
+.dp-btn {
   border: 0;
   background-color: inherit;
 }
@@ -32,27 +36,6 @@ button {
   font-weight: bold;
 }
 
-:root {
-  --dark-body-bg: #040818;
-  --light-body-bg: #f5f7fb;
-
-  --dark-input: #111620;
-  --light-input: #ffffff;
-
-  --dark-border: #030407;
-  --light-border: #b8bccb;
-
-  --dark-date-foreground: #ffffff;
-  --dark-inactive-fg: #636a78;
-  --dark-active-fg: #9ca0b1;
-  --dark-current-year: #121922;
-  --dark-current-year-fg: #b2b8c9;
-  --dark-selected: #f9b233;
-  --dark-hover: #2c437b;
-  --font: "Yekan";
-  --dark-arrows-fill: #ffffff;
-}
-
 html {
   box-sizing: border-box;
 }
@@ -63,57 +46,27 @@ html {
   box-sizing: inherit;
 }
 
-body {
-  height: 100vh;
 
-  font-family: Yekan;
-  display: grid;
-  place-items: center;
-}
 
-#date_picker {
-  margin: 0 auto;
 
-  position: relative;
-  top: 15%;
-}
-
-#date_picker_input {
-  margin-bottom: 8px;
-}
-
-label {
-  display: block;
-  color: #8a8f9f;
-  font-size: 1.02rem;
-  font-weight: 300;
-  margin-bottom: 10px;
-}
-
-#date {
-  color: black;
-
-  padding: 12px 20px;
-}
-
-#date_picker_calendar {
+.dp .date_picker_calendar {
   min-height: fit-content;
   box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   padding: 1.25rem;
 }
 
-#date,
-#date_picker_calendar {
+
+.dp  .date_picker_calendar {
   border-radius: 28px;
   background: #fff;
   width: 25.75rem;
 }
 
-#calendar_header {
+.dp  .calendar_header {
   width: 100%;
   min-height: 30px;
-  /*   background: pink; */
+
   margin-bottom: 8px;
   color: black;
   display: flex;
@@ -123,7 +76,7 @@ label {
   padding-bottom: 0.5rem;
 }
 
-.cal-btn {
+.dp  .cal-btn {
   width: 20px;
   height: 20px;
   background: var(--dark-arrows-bg);
@@ -133,39 +86,39 @@ label {
   border-radius: 6px;
 }
 
-.cal-btn img {
+.dp  .cal-btn img {
   width: 42%;
   height: 42%;
 }
 
-.cal-btn.back img {
+.dp .cal-btn.back img {
   transform: rotate(-90deg);
 }
 
-.cal-btn.front img {
+.dp .cal-btn.front img {
   transform: rotate(90deg);
 }
 
-#cal_days,
-#calendar_main {
+.dp .cal_days,
+.dp .calendar_main {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   color: var(--dark-inactive-fg);
 }
 
-#cal_days {
+.dp .cal_days {
   white-space: nowrap;
   margin-bottom: 10px;
   font-size: 0.5rem;
 }
 
-#calendar_main {
+.dp .calendar_main {
   grid-template-rows: repeat(5, min(30px));
 }
 
-.cell_wrapper {
-  /*   background: yellow; */
+.dp .cell_wrapper {
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -173,42 +126,31 @@ label {
 
   position: relative;
 }
-.cal_label {
+.dp .cal_label {
   margin-inline-end: 0.875rem;
   margin-block: 0;
 }
-.current {
+.dp .current {
   background: transparent;
   color: black;
 }
 
-.cal-btn:hover,
-.current:hover {
+.dp.cal-btn:hover,
+.dp .current:hover {
   cursor: pointer;
 }
 
-.isSelected {
+.dp .isSelected {
   background: #292d32;
   color: white;
 }
 
-.inactive_indicator:after {
-  /*   text-decoration: underline; */
-  content: "";
-  width: 3px;
-  height: 3px;
-  background: red;
-  border-radius: 50%;
-  position: absolute;
-  bottom: 3px;
-  left: 50%;
-}
 
-.hiddenz {
+.dp .hiddenz {
   visibility: hidden;
 }
 
-#change-calendar {
+.dp .change-calendar {
   width: 100%;
   border-radius: 9px;
   background-color: rgb(8, 7, 7);
@@ -218,51 +160,51 @@ label {
   border: 0;
 }
 
-.cal_date {
+.dp .cal_date {
   font-size: 0.75rem;
   height: 30px;
 }
-.cal_date.disabled {
+.dp .cal_date.disabled {
   background: #f5f6f8;
   color: #b7b7b7;
 }
-.whole-wrapper {
+.dp .whole-wrapper {
   border-bottom: 1px solid #bebebe;
   padding-bottom: 11px;
 }
 
-.actions {
+.dp .actions {
   padding-top: 0.75rem;
   gap: 6px;
   justify-content: end;
 }
-.actions * {
+.dp .actions * {
   border-radius: 9px;
 }
 
-#delete {
+.dp .delete {
   background: #f8f8f8;
   width: 3.6875rem;
   height: 1.75rem;
   color: #8a8a8a;
 }
 
-#select {
+.dp .select {
   background-color: black;
   color: white;
   width: 3.8125rem;
   height: 1.75rem;
 }
 
-.custom-select {
+.dp .custom-select {
   font-family: Yekan;
 }
 
-.custom-select select {
+.dp .custom-select select {
   display: none;
 }
 
-.select-items {
+.dp .select-items {
   box-shadow: 0px 0px 16px 0px rgba(0, 0, 0, 0.08);
   background-color: white;
   border-radius: 16px;
@@ -276,19 +218,22 @@ label {
 }
 
 /* Hide the items when the select box is closed: */
-.select-hide {
+.dp .select-hide {
   display: none;
 }
 
-.year-picker.open .dropdown-ico {
+.dp .select-container.open .dropdown-ico {
   rotate: 180deg;
-  margin-top: 0 !important;
-  margin-bottom: 0.5rem;
+}
+
+.dp .dropdown-ico {
+  line-height: .1;
+
 }
 
 /* Scroll Month Picker */
 
-.month-picker {
+.dp .month-picker {
   width: 116px;
   height: 215px;
   padding-inline: 10px;
@@ -305,7 +250,7 @@ label {
   position: relative;
 }
 
-.month-picker-header {
+.dp .month-picker-header {
   background-color: #f9f9f9;
   padding: 10px;
   display: flex;
@@ -314,19 +259,19 @@ label {
   border-bottom: 1px solid #e0e0e0;
 }
 
-.month-selected {
+.dp .month-selected {
   text-align: center;
   font-size: 16px;
   font-weight: bold;
 }
 
-.month-list-container {
+.dp .month-list-container {
   position: relative;
   height: 100%;
   overflow: hidden;
 }
 
-.month-list {
+.dp .month-list {
   position: absolute;
   width: 100%;
   top: 0;
@@ -336,20 +281,20 @@ label {
   box-sizing: border-box;
 }
 
-.month-list::-webkit-scrollbar {
+.dp .month-list::-webkit-scrollbar {
   width: 5px;
 }
 
-.month-list {
+.dp .month-list {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer/Edge */
 }
 
-.month-list::-webkit-scrollbar-thumb {
+.dp .month-list::-webkit-scrollbar-thumb {
   display: none;
 }
 
-.month-item {
+.dp .month-item {
   height: 35px;
   display: flex;
   align-items: center;
@@ -359,13 +304,13 @@ label {
   font-size: 14px;
 }
 
-.month-item.selected {
+.dp .month-item.selected {
   color: #2196f3;
   font-weight: bold;
   font-size: 16px;
 }
 
-.selection-indicator {
+.dp .selection-indicator {
   position: absolute;
   left: 0;
   right: 0;
@@ -379,9 +324,10 @@ label {
 }
 
 /* Add padding to make items align perfectly with center */
-.month-list::before,
-.month-list::after {
+.dp .month-list::before,
+.dp .month-list::after {
   content: "";
   display: block;
   height: 100px;
 }
+

@@ -14,7 +14,7 @@ function handleContainerClick(e) {
     console.error("Select elements not found in", container);
   }
 }
-export function initCustomSelect() {
+export function dpInitCustomSelect() {
   /* Remove any existing custom selects to prevent duplicates */
   document
     .querySelectorAll(".select-value, .select-items")
