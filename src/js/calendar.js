@@ -16,6 +16,10 @@ class DatePicker {
     this.calendar = this.dp.querySelector(".calendar_main");
     this.calDays = this.dp.querySelector(".cal_days");
 
+    this.input.addEventListener("click", () => {
+      dpInitScrollMonthPicker(this.selector);
+    });
+
     // Calendar state
     this.calendarType = "jalali";
     this.selectedYear = null;
@@ -652,37 +656,25 @@ class DatePicker {
     this.updateInput(monthDetails, selectedTimestamp);
   }
 
-  // Methods for the additional components
+
   generateYearOptions() {
     const yearPicker = this.dp.querySelector(".select-container");
     if (!yearPicker) return;
 
     const selectElement = yearPicker.querySelector("select");
 
-    // Clear any existing options
     selectElement.innerHTML = "";
 
-    if (this.calendarType === "jalali") {
-      // Add 4 years starting from the current Jalali year
+    const YEARS_BACK = 100;
 
-      for (let i = 0; i < 4; i++) {
-        const option = document.createElement("option");
-        option.value = this.selectedYear + i;
-        option.textContent = this.selectedYear + i;
-        selectElement.appendChild(option);
-      }
-    } else {
-      // Add 4 years starting from the current Gregorian year
-      for (let i = 0; i < 4; i++) {
-        const option = document.createElement("option");
-        option.value = this.selectedYear + i;
-        option.textContent = this.selectedYear + i;
-        selectElement.appendChild(option);
-      }
+    for (let y = this.selectedYear; y >= this.selectedYear - YEARS_BACK; y--) {
+      const option = document.createElement("option");
+      option.value = y;
+      option.textContent = y;
+      selectElement.appendChild(option);
     }
   }
 
-  // These methods would need to be implemented separately or imported
   initScrollMonthPicker() {
     dpInitScrollMonthPicker(this.selector);
   }

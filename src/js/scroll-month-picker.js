@@ -7,10 +7,9 @@ export function dpInitScrollMonthPicker(selector) {
 
   if (!monthList) return;
 
-  // **Step 1: Remove all previous event listeners**
-  const newMonthList = monthList.cloneNode(false); // Clone without children
-  monthList.parentNode.replaceChild(newMonthList, monthList); // Replace old one
-  monthList.innerHTML = ""; // Clear all items
+  const newMonthList = monthList.cloneNode(false);
+  monthList.parentNode.replaceChild(newMonthList, monthList);
+  monthList.innerHTML = "";
 
   let monthItems = Array.from(dp.querySelectorAll(".month-item"));
   const colors = ["#000", "#5A5A5A", "#858585", "#B6B6B6", "#D4D4D4"];
@@ -54,20 +53,18 @@ export function dpInitScrollMonthPicker(selector) {
 
   function scrollToMonth(index) {
     const item = monthItems[index];
-    const containerRect = dp
-      .querySelector(".month-list-container")
-      .getBoundingClientRect();
-    const containerCenter = containerRect.height / 2;
+
     const scrollPosition =
-      item.offsetTop - containerCenter + item.offsetHeight / 2;
+      item.offsetTop - newMonthList.clientHeight / 2 + item.offsetHeight / 2;
 
     isScrolling = true;
+
     newMonthList.scrollTo({ top: scrollPosition, behavior: "smooth" });
 
     setTimeout(() => {
       isScrolling = false;
       lastScrollPosition = newMonthList.scrollTop;
-    }, 0);
+    }, 300);
   }
 
   newMonthList.addEventListener(

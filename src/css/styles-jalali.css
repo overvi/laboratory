@@ -211,7 +211,8 @@ html {
   margin-top: 0.25rem;
   padding: 24px;
   padding-bottom: 20px;
-
+  max-height: 10rem;
+  overflow-y: scroll;
   position: absolute;
 
   z-index: 50;
